@@ -1,11 +1,13 @@
 package ems_backend.controller;
 
+import ems_backend.dto.EmployeeResponse;
 import lombok.AllArgsConstructor;
 import ems_backend.service.EmployeeService;
 import ems_backend.dto.EmployeeDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -31,12 +33,14 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeDto);
     }
 
-    //Build Get All Employees REST API
+    /**
+    //Build Get All Employees REST API old implementation without pagination
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAllEmployees(){
         List<EmployeeDto> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }
+    **/
 
     //Build Update Employee REST API
     @PutMapping("{id}")
@@ -52,5 +56,16 @@ public class EmployeeController {
     public ResponseEntity<String> deleteEmployee(@PathVariable("id") Long employeeId){
         employeeService.deleteEmployee(employeeId);
         return ResponseEntity.ok("Employee deleted successfully!");
+    }
+
+    // Build Get All Employees REST API with Pagination and Sorting
+    @GetMapping
+    public ResponseEntity<EmployeeResponse> getAllEmployees(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
+    ) {
+        return ResponseEntity.ok(employeeService.getAllEmployees(pageNo, pageSize, sortBy, sortDir));
     }
 }
