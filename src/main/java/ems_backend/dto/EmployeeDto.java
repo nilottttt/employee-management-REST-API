@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -23,4 +25,7 @@ public class EmployeeDto {
     @NotBlank(message = "Email is required")
     @Email(message = "Please provide a valid email address format.")
     private String email;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
